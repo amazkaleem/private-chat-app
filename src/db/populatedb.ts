@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { Client } from "pg";
 
 const SQL = `
@@ -14,9 +15,6 @@ const SQL = `
         membership_status user_role NOT NULL DEFAULT 'standard',
         created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
     );
-
-    -- Index for fast user lookup during login
-    CREATE INDEX idx_users_email ON users(email);
 
 
     -- 3. MESSAGES TABLE
@@ -38,10 +36,6 @@ const SQL = `
         read_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
         PRIMARY KEY (user_id, message_id)
     );
-
-    -- Index to quickly check if a user has read a specific message
-    CREATE INDEX idx_read_receipts_user ON read_receipts(user_id);
-
 
     CREATE TABLE "session" (
         "sid" varchar NOT NULL COLLATE "default",

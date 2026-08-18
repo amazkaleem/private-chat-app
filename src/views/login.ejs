@@ -7,9 +7,15 @@
   </head>
   <body>
     <h1>Please Log In</h1>
+    <% if (locals.message) { %>
+      <div class="error-alert" style="color: red;">
+        <%= message %>
+      </div>
+    <% } %>
+    <%- include("partials/errors.ejs") %>
     <form action="/login" method="post">
-      <label for="username">Username: </label>
-      <input type="text" id="userInput" name="username" />
+      <label for="email">Email: </label>
+      <input type="text" id="emailInput" name="email" />
       <label for="password">Password: </label>
       <input type="password" id="passwordInput" name="password" />
       <button type="submit">Submit</button>
