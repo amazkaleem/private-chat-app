@@ -1,9 +1,10 @@
 import type { Request, Response, NextFunction } from "express";
 import bcrypt from "bcrypt";
-import { signUpUserQuery } from "../db/queries.js";
+import { getUserQuery, signUpUserQuery } from "../db/queries.js";
 import { body, validationResult } from "express-validator";
 import type { ValidationChain } from "express-validator";
 import passport from "passport";
+import { error } from "node:console";
 
 const alphaErr = "must only contain letters.";
 const lengthErr = "must be between 1 and 10 characters.";
@@ -62,26 +63,44 @@ export const signUpUser = [
     try {
       const { firstName, lastName, email, password } = req.body;
 
+      const user = await getUserQuery(undefined, email);
+
+      if (user) {
+        return res.status(400).render("signup", {
+          errors: [
+            {
+              msg: "There is already a user with this email. Please try another email.",
+            },
+          ],
+        });
+      }
+
       const hashedPassword: string = await bcrypt.hash(password, 10);
       await signUpUserQuery(firstName, lastName, email, hashedPassword);
-
-      res.status(200).redirect("/");
     } catch (error) {
       console.error(error);
       next(error);
     }
+    return passport.authenticate("local", {
+      successRedirect: "/chat-messages",
+      failureRedirect: "/signup",
+    })(req, res, next);
   },
 ];
 
 export const LogInUser = [
   ...validateUserLogIn,
-  (req: Request<{}, {}, LogInRequestBody>, res: Response, next: NextFunction) => {
+  (
+    req: Request<{}, {}, LogInRequestBody>,
+    res: Response,
+    next: NextFunction,
+  ) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).render("login", { errors: errors.array() });
     }
-    passport.authenticate("local", {
-      successRedirect: "/",
+    return passport.authenticate("local", {
+      successRedirect: "/chat-messages",
       failureRedirect: "/login",
       failureMessage: true,
     })(req, res, next);

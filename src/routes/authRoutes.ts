@@ -5,22 +5,24 @@ import { signUpUser, LogInUser } from "../controllers/authControllers.js";
 const authRouter: Router = express.Router();
 
 authRouter.get("/login", (req: Request, res: Response) => {
-  // 1. Passport stores failure messages in an array on the session
-  // We use `as any` here to bypass TS strictness, or you can extend the SessionData interface
-  const messages = (req.session as any).messages || [];
+  const session = req.session as any;
+  const messages = session.messages;
 
-  // 2. Clear the messages so the error disappears on a page refresh
-  (req.session as any).messages = [];
+  let errorMessage = null;
 
-  // 3. Grab the most recent message (if any exist)
-  const errorMessage = messages.length > 0 ? messages[messages.length - 1] : null;
+  // We only extract out and delete the messages property of the req.session object once we are sure that
+  // the user has failed login procedure
+  // So that session cookie is ONLY generated once a user logs in
+  if (messages?.length) {
+    errorMessage = messages[messages.length - 1];
+    delete session.messages;  // delete keyword can be used to delete properties from an object, though recommended to not use it for arrays
+  }
 
-  // 4. Render the page and pass the message
-  res.status(200).render("login", { message: errorMessage });
+  return res.status(200).render("login", { message: errorMessage });
 });
 
 authRouter.get("/signup", (req: Request, res: Response) => {
-  res.status(200).render("signup");
+  return res.status(200).render("signup");
 });
 
 authRouter.post("/login", LogInUser);

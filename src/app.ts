@@ -4,6 +4,7 @@ import type { Express, Request, Response } from "express";
 import { fileURLToPath } from "url";
 import path from "path";
 import authRouter from "./routes/authRoutes.js";
+import chatsRouter from "./routes/chatRoutes.js";
 import passport from "passport";
 import pool from "./db/pool.js";
 import session from "express-session";
@@ -28,6 +29,7 @@ app.use(express.json());
 const pgStore = new pgSession({
   pool: pool,
   tableName: "session",
+  pruneSessionInterval: 60,
 });
 
 const sessionSecret = process.env.FOO_COOKIE_SECRET as KeyLike;
@@ -38,7 +40,7 @@ app.use(
     secret: sessionSecret,
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 60 * 1000 }, // 60 seconds
+    cookie: { maxAge: 40 * 1000 }, // 40 seconds
   }),
 );
 
@@ -46,10 +48,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.get("/", (req: Request, res: Response) => {
-  res.status(200).render("index");
+  return res.status(200).render("index");
 });
 
 app.use(authRouter);
+app.use(chatsRouter);
 
 app.listen(port, (error) => {
   if (error) {
