@@ -24,6 +24,7 @@ app.set("view engine", "ejs");
 const pgSession = connectPgSimple(session);
 
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 
 const pgStore = new pgSession({

@@ -4,9 +4,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chat</title>
+    <link rel="stylesheet" href="/globals.css">
   </head>
   <body>
     <h1>Welcome to the Amazing Chat!</h1>
+    <h2>Start by messaging anything! But please don't spam</h2>
+    <% if (locals.message) { %>
+      <div class="error-alert" style="color: red;">
+        <%= message %>
+      </div>
+    <% } %>
+    <%- include('partials/messages.ejs') %>
+    <%- include('partials/messageForm.ejs') %>
+    <br>
     <div>
       <a href="/logout">
         <button type="button">Log Out</button>

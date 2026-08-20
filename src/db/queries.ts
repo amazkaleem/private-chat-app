@@ -1,5 +1,5 @@
 import pool from "./pool.js";
-import type { UserRow } from "./database.types.js";
+import type { UserRow, MessageRow } from "./database.types.js";
 
 export async function signUpUserQuery(
   first_name: string,
@@ -42,5 +42,41 @@ export async function getUserQuery(
     const message =
       error instanceof Error ? error.message : "Unknown database error";
     throw new Error(`Error while getting user: ${message}`);
+  }
+}
+
+export async function getAllMessagesQuery(user_id?: number): Promise<MessageRow[]> {
+  try {
+    if (user_id !== undefined) {
+      // pool.query<MessageRow>(...) tells TypeScript:
+      // “Each row returned by this SQL query has the shape MessageRow.”
+      // The overall query result is a QueryResult<MessageRow> object:
+      const result = await pool.query<MessageRow>(
+        "SELECT * FROM messages WHERE author_id = $1 ORDER BY created_at ACS",
+        [user_id],
+      );
+      return result.rows;
+    }
+
+    const result = await pool.query<MessageRow>("SELECT * FROM messages ORDER BY created_at ASC");
+    return result.rows;
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Unknown database error";
+    throw new Error(`Error while getting messages: ${message}`);
+  }
+}
+
+
+export async function createMessageQuery(author_id: number, title: string, text: string): Promise<void> {
+const queryText: string =
+    "INSERT INTO messages (title, text, author_id) VALUES ($1, $2, $3)";
+  const values: Array<string | number> = [title, text, author_id];
+  try {
+    await pool.query(queryText, values);
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "Unknown database error";
+    throw new Error(`Error while creating a new message: ${message}`);
   }
 }

@@ -1,0 +1,25 @@
+<% if (locals.messages) { %>
+  <% messages.forEach((message) => { %>
+    <% const alignmentClass = message.author_id === userObject.id ? "message-left" : "message-right"; %>
+    <div class="<%= alignmentClass %>">
+      <% if (userObject && (userObject.membership_status === "member" || userObject.membership_status === "admin")) { %>
+        <h5><%= userObject.first_name %></h5>
+      <% } %>
+
+      <% if (userObject && (userObject.membership_status === "member" || userObject.membership_status === "admin" || userObject.membership_status === "standard")) { %>
+        <p><%= message.text %></p>
+      <% } %>
+
+      <% if (userObject && (userObject.membership_status === "member" || userObject.membership_status === "admin")) { %>
+        <p><%= userObject.created_at %></p>
+      <% } %>
+
+      <% if (userObject && userObject.membership_status === "admin") { %>
+        <form action="/items/<%= itemObject.id %>/delete?_method=DELETE" method="post">
+          <button type="submit">Delete the Item</button>
+        </form>
+      <% } %>
+    </div>
+  <% }); %>
+<% } %>
+
