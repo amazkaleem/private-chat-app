@@ -1,25 +1,15 @@
+import "dotenv/config";
 import express from "express";
 import type { Router, Request, Response, NextFunction } from "express";
-import { signUpUser, LogInUser } from "../controllers/authControllers.js";
+import { modifySession, logOutUser } from "../controllers/getControllers.js";
+import { LogInMember, LogInAdmin } from "../controllers/patchControllers.js";
+import { signUpUser, LogInUser } from "../controllers/postControllers.js";
+import { ensureAuthenticated } from "../middleware/authMiddleware.js";
+import type { UserRow } from "../db/database.types.js";
 
 const authRouter: Router = express.Router();
 
-authRouter.get("/login", (req: Request, res: Response) => {
-  const session = req.session as any;
-  const messages = session.messages;
-
-  let errorMessage = null;
-
-  // We only extract out and delete the messages property of the req.session object once we are sure that
-  // the user has failed login procedure
-  // So that session cookie is ONLY generated once a user logs in
-  if (messages?.length) {
-    errorMessage = messages[messages.length - 1];
-    delete session.messages;  // delete keyword can be used to delete properties from an object, though recommended to not use it for arrays
-  }
-
-  return res.status(200).render("login", { message: errorMessage });
-});
+authRouter.get("/login", modifySession);
 
 authRouter.get("/signup", (req: Request, res: Response) => {
   return res.status(200).render("signup");
@@ -29,13 +19,30 @@ authRouter.post("/login", LogInUser);
 
 authRouter.post("/signup", signUpUser);
 
-authRouter.get("/logout", (req:Request, res:Response, next:NextFunction) => {
-  req.logout((err) => {
-    if (err) {
-      return next(err);
-    }
-    res.redirect("/login");
-  });
-});
+authRouter.get("/logout", logOutUser);
+
+authRouter.get(
+  "/memberLogin",
+  ensureAuthenticated,
+  (req: Request, res: Response) => {
+    const user = req.user as UserRow;
+    const userId: number | undefined = user.id;
+    return res.status(200).render("memberLogin", { userId: userId });
+  },
+);
+
+authRouter.get(
+  "/adminLogin",
+  ensureAuthenticated,
+  (req: Request, res: Response) => {
+    const user = req.user as UserRow;
+    const userId: number | undefined = user.id;
+    return res.status(200).render("adminLogin", { userId: userId });
+  },
+);
+
+authRouter.patch("/memberLogin/:userId/patch", LogInMember);
+
+authRouter.patch("/adminLogin/:userId/patch", LogInAdmin);
 
 export default authRouter;

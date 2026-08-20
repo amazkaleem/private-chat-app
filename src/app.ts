@@ -10,6 +10,7 @@ import pool from "./db/pool.js";
 import session from "express-session";
 import connectPgSimple from "connect-pg-simple";
 import type { KeyLike } from "crypto";
+import methodOverride from "method-override";
 import "./config/passport.js";
 
 const __filename: string = fileURLToPath(import.meta.url);
@@ -25,6 +26,7 @@ const pgSession = connectPgSimple(session);
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(methodOverride("_method"));
 app.use(express.json());
 
 const pgStore = new pgSession({

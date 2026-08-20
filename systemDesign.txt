@@ -58,40 +58,29 @@ RESTful API Design (PATCH/DELETE methods not used since HTML Forms only allow GE
    i) 200 Success - msgContent
    ii) 404 Not Found
 
-7) Get the Members list (Admin Only) (GET /chat-members):
-   Response: 
-   i) 200 Success - [members]
-   ii) 404 Not Found
-
-8) Remove Members (Admin Only) (POST /chat-members/:userid/delete):
-   Request: :userid
-   Response:
-   i) 302 Redirect to "/chat-members"
-   ii) 404 Not Found
-
-9) Delete Messages (Admin Only) (POST /chat-messages/:messageid/delete):
+7) Delete Messages (Admin Only) (POST /chat-messages/:messageid/delete):
     Request: :messageid
     Response:
     i) 302 Redirect to "/chat-messages"
     ii) 500 Internal Server Error
 
-10) Get Member Log In Form (GET /member-log-in):
+8) Get Member Log In Form (GET /member-log-in):
     Response: 
     i) 200 Success - Render Member Log In Form
     ii) 500 Internal Server Error
 
-11) Create new Member (POST /member-log-in):
+9) Create new Member (POST /member-log-in):
     Response:
     i) 302 Redirect to "/chat-messages" (User Status Changed to "Member")
     ii) 400 Validation Errors
     iii) 500 Internal Server Error
 
-12) Get Admin Log In Form (GET /admin-log-in):
+10) Get Admin Log In Form (GET /admin-log-in):
     Response:
     i) 200 Success - Render Admin Log In Form
     ii) 500 Internal Server Error
 
-13) Create new Admin (POST /admin-log-in):
+11) Create new Admin (POST /admin-log-in):
     Response:
     i) 302 Redirect to "/chat-messages" (User Status Changed to "Admin")
     ii) 400 Validation Errors

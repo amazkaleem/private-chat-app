@@ -1,9 +1,10 @@
 <% if (locals.messages) { %>
   <% messages.forEach((message) => { %>
     <% const alignmentClass = message.author_id === userObject.id ? "message-left" : "message-right"; %>
+    <% const myDate = new Date(message.created_at); %>
     <div class="<%= alignmentClass %>">
       <% if (userObject && (userObject.membership_status === "member" || userObject.membership_status === "admin")) { %>
-        <h5><%= userObject.first_name %></h5>
+        <h3><%= message.author_first_name %></h3>
       <% } %>
 
       <% if (userObject && (userObject.membership_status === "member" || userObject.membership_status === "admin" || userObject.membership_status === "standard")) { %>
@@ -11,12 +12,13 @@
       <% } %>
 
       <% if (userObject && (userObject.membership_status === "member" || userObject.membership_status === "admin")) { %>
-        <p><%= userObject.created_at %></p>
+        <p style="font-size: small; display: inline-block;"><%= myDate.toLocaleDateString() %></p>
+        <p style="font-size: small; display: inline-block;"><%= myDate.toLocaleTimeString() %></p>
       <% } %>
 
       <% if (userObject && userObject.membership_status === "admin") { %>
-        <form action="/items/<%= itemObject.id %>/delete?_method=DELETE" method="post">
-          <button type="submit">Delete the Item</button>
+        <form action="/chat-messages/<%= message.id %>/delete?_method=DELETE" method="post">
+          <button type="submit">Delete Message</button>
         </form>
       <% } %>
     </div>

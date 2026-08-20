@@ -34,6 +34,13 @@ POSTGRES_PASSWORD={DB_PASSWORD}
 DB_PORT={PORT}
 ```
 
+To enable Member/Admin Statuses,
+
+```bash
+MEMBER_PASSCODE={RANDOM_STRING}
+ADMIN_PASSCODE={RANDOM_STRING}
+```
+
 ### 🍪 Session & Cookies
 
 For session-based authentication,
