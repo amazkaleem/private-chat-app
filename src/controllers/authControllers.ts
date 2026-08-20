@@ -4,7 +4,6 @@ import { getUserQuery, signUpUserQuery } from "../db/queries.js";
 import { body, validationResult } from "express-validator";
 import type { ValidationChain } from "express-validator";
 import passport from "passport";
-import { error } from "node:console";
 
 const alphaErr = "must only contain letters.";
 const lengthErr = "must be between 1 and 10 characters.";

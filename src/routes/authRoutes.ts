@@ -29,4 +29,13 @@ authRouter.post("/login", LogInUser);
 
 authRouter.post("/signup", signUpUser);
 
+authRouter.get("/logout", (req:Request, res:Response, next:NextFunction) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    res.redirect("/login");
+  });
+});
+
 export default authRouter;

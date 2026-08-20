@@ -29,7 +29,7 @@ app.use(express.json());
 const pgStore = new pgSession({
   pool: pool,
   tableName: "session",
-  pruneSessionInterval: 60,
+  pruneSessionInterval: 60 * 15,
 });
 
 const sessionSecret = process.env.FOO_COOKIE_SECRET as KeyLike;
@@ -40,7 +40,7 @@ app.use(
     secret: sessionSecret,
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 40 * 1000 }, // 40 seconds
+    cookie: { maxAge: 24 * 60 * 60 * 1000 }, // 1 day
   }),
 );
 
