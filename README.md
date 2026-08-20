@@ -12,14 +12,12 @@ A private chat application inspired by Clubhouse, built as part of The Odin Proj
 - Users are categorized into "Visitors", "Members", and "Admins"
 - Visitors can only receive messages (without author/date labels) and create new messages
 - Visitors can upgrade to Members and can view messages (with author/date labels) as well
-- Members can upgrade to Admins and can delete messages, view members list and remove them as well.
-- Only Members and Admins mark messages as read
+- Members can upgrade to Admins and can delete messages as well
+- Members and Admin Log in have their respective passcodes, set only once in the .env file
 
 ## 🗺️ System Design
 The functional/nonfunctional requirements, data math and high level API Design can be read in the `systemDesign.txt` file.
 The high level system design and the data model can be viewed in the images, `High Level System Design.png` and `Data Model.png` respectively.
-
-
 
 ## 📁.env Setup
 
