@@ -4,13 +4,40 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Chat</title>
+    <link rel="stylesheet" href="/globals.css">
   </head>
   <body>
     <h1>Welcome to the Amazing Chat!</h1>
+    <h2>Start by messaging anything! But please don't spam</h2>
+    <% if (locals.message) { %>
+      <div class="error-alert" style="color: red;">
+        <%= message %>
+      </div>
+    <% } %>
+    <%- include('partials/messages.ejs') %>
+    <br>
+    <%- include('partials/messageForm.ejs') %>
+    <br>
     <div>
       <a href="/logout">
         <button type="button">Log Out</button>
       </a>
     </div>
+    <br>
+    <% if (userObject && userObject.membership_status === "standard") { %>
+      <div>
+        <a href="/memberLogin">
+          <button type="button">Log In As A Member!</button>
+        </a>
+      </div>
+    <% } %>
+    <br>
+    <% if (userObject && (userObject.membership_status === "member" || userObject.membership_status === "standard")) { %>
+      <div>
+        <a href="/adminLogin">
+          <button type="button">Log In As An Admin!</button>
+        </a>
+      </div>
+    <% } %>
   </body>
 </html>

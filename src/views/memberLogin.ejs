@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log In Member!</title>
+</head>
+<body>
+    <h1>Log In as a member!</h1>
+    <% if (locals.message) { %>
+      <div class="error-alert" style="color: red;">
+        <%= message %>
+      </div>
+    <% } %>
+    <form action="/memberLogin/<%= userId %>/patch?_method=PATCH" method="post">
+        <label for="memberLoginInput">Please enter the correct Passcode</label>
+        <input type="password" placeholder="Type in Member Passcode" id="memberLoginInput" name="memberLoginInput">
+        <button type="submit">Log In</button>
+    </form>
+</body>
+</html>

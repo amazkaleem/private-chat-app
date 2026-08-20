@@ -29,14 +29,6 @@ const SQL = `
     -- Index for fetching feed ordered by latest timestamp
     CREATE INDEX idx_messages_created_at ON messages(created_at DESC);
 
-    -- 4. READ RECEIPTS TABLE (Per-User Read Tracking)
-    CREATE TABLE read_receipts (
-        user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-        message_id INT NOT NULL REFERENCES messages(id) ON DELETE CASCADE,
-        read_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        PRIMARY KEY (user_id, message_id)
-    );
-
     CREATE TABLE "session" (
         "sid" varchar NOT NULL COLLATE "default",
         "sess" json NOT NULL,

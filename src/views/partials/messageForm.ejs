@@ -1,0 +1,7 @@
+<% if (locals.userObject) { %>
+  <form action="/chat-messages/<%= userObject.id %>" method="post">
+    <label for="messageText" style="display: block;"><%= userObject.first_name + " " + userObject.last_name %></label>
+    <textarea name="messageText" id="messageText" placeholder="Type your message"></textarea>
+    <button type="submit">Send Message</button>
+  </form>
+<% } %>

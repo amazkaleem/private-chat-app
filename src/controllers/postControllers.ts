@@ -1,6 +1,10 @@
 import type { Request, Response, NextFunction } from "express";
 import bcrypt from "bcrypt";
-import { getUserQuery, signUpUserQuery } from "../db/queries.js";
+import {
+  getUserQuery,
+  signUpUserQuery,
+  createMessageQuery,
+} from "../db/queries.js";
 import { body, validationResult } from "express-validator";
 import type { ValidationChain } from "express-validator";
 import passport from "passport";
@@ -105,3 +109,19 @@ export const LogInUser = [
     })(req, res, next);
   },
 ];
+
+export const createMessage = async (req: Request, res: Response) => {
+  const { authorId } = req.params;
+  const author_id = Number(authorId);
+  const { messageText } = req.body;
+  const title = "private message";
+
+  try {
+    await createMessageQuery(author_id, title, messageText);
+    return res.status(200).redirect("/chat-messages");
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(500).render("chat", { message: error.message });
+    }
+  }
+};
